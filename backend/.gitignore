@@ -1,0 +1,5 @@
+node_modules/
+.env
+uploads/buildings/*
+!uploads/buildings/.gitkeep
+npm-debug.log
