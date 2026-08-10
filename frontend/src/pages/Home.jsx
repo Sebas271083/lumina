@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 import BuildingCard from '../components/BuildingCard';
 import Reveal from '../components/Reveal';
+import CountUp from '../components/CountUp';
 import usePageMeta from '../hooks/usePageMeta';
 import { Building2, Leaf, MapPin } from '../components/Icons';
 
@@ -89,17 +90,23 @@ export default function Home() {
           {buildings.length > 0 && (
             <div className="hero-stats">
               <div className="stat-item">
-                <span className="stat-value">{buildings.length}</span>
+                <span className="stat-value">
+                  <CountUp value={buildings.length} />
+                </span>
                 <span className="stat-label">Edificios</span>
               </div>
               {totalM2 > 0 && (
                 <div className="stat-item">
-                  <span className="stat-value">{totalM2.toLocaleString('es-AR')}</span>
+                  <span className="stat-value">
+                    <CountUp value={totalM2} formatter={(n) => n.toLocaleString('es-AR')} />
+                  </span>
                   <span className="stat-label">m² desarrollados</span>
                 </div>
               )}
               <div className="stat-item">
-                <span className="stat-value">{tenants.length}+</span>
+                <span className="stat-value">
+                  <CountUp value={tenants.length} suffix="+" />
+                </span>
                 <span className="stat-label">Empresas inquilinas</span>
               </div>
             </div>
