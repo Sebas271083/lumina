@@ -30,7 +30,7 @@ async function updateStatus(req, res, next) {
 
     const { status } = req.body;
     if (!['nuevo', 'contactado', 'archivado'].includes(status)) {
-      return res.status(400).json({ message: 'Estado invalido' });
+      return res.status(400).json({ message: 'Estado inválido' });
     }
 
     lead.status = status;

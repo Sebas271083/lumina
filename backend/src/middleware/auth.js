@@ -13,7 +13,7 @@ function requireAuth(req, res, next) {
     req.user = payload;
     next();
   } catch (err) {
-    return res.status(401).json({ message: 'No autorizado: token invalido o expirado' });
+    return res.status(401).json({ message: 'No autorizado: token inválido o expirado' });
   }
 }
 

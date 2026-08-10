@@ -1,18 +1,33 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import BuildingCard from '../components/BuildingCard';
 import Reveal from '../components/Reveal';
+import usePageMeta from '../hooks/usePageMeta';
 
 const tabs = [
   { id: 'todos', label: 'Todos' },
   { id: 'finalizado', label: 'Finalizados' },
   { id: 'proyecto', label: 'Proyectos' },
 ];
+const VALID_FILTERS = tabs.map((t) => t.id);
 
 export default function Edificios() {
+  usePageMeta(
+    'Edificios',
+    'Explorá el portfolio completo de edificios de oficinas de Lumina Office, finalizados y en desarrollo.'
+  );
+
   const [buildings, setBuildings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('todos');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const requestedFilter = searchParams.get('estado');
+  const filter = VALID_FILTERS.includes(requestedFilter) ? requestedFilter : 'todos';
+
+  function handleFilterChange(id) {
+    setSearchParams(id === 'todos' ? {} : { estado: id });
+  }
 
   useEffect(() => {
     api
@@ -41,7 +56,7 @@ export default function Edificios() {
               key={tab.id}
               type="button"
               className={`tab${filter === tab.id ? ' active' : ''}`}
-              onClick={() => setFilter(tab.id)}
+              onClick={() => handleFilterChange(tab.id)}
             >
               {tab.label}
             </button>
@@ -57,7 +72,7 @@ export default function Edificios() {
             ))}
           </div>
         ) : (
-          <p>No hay edificios para mostrar en esta categoria.</p>
+          <p>No hay edificios para mostrar en esta categoría.</p>
         )}
       </div>
     </div>

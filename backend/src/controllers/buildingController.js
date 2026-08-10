@@ -31,7 +31,10 @@ async function getBySlug(req, res, next) {
 
 async function create(req, res, next) {
   try {
-    const { name, category, sizeM2, address, description, featured, displayOrder } = req.body;
+    const {
+      name, category, sizeM2, availableM2, address, description,
+      amenities, certifications, featured, displayOrder,
+    } = req.body;
     if (!name) return res.status(400).json({ message: 'El nombre es requerido' });
 
     let slug = slugify(name);
@@ -43,8 +46,11 @@ async function create(req, res, next) {
       slug,
       category: category || 'finalizado',
       sizeM2: sizeM2 || null,
+      availableM2: availableM2 || null,
       address: address || null,
       description: description || null,
+      amenities: Array.isArray(amenities) ? amenities : [],
+      certifications: Array.isArray(certifications) ? certifications : [],
       featured: featured === true || featured === 'true',
       displayOrder: displayOrder || 0,
     });
@@ -60,7 +66,10 @@ async function update(req, res, next) {
     const building = await Building.findByPk(req.params.id);
     if (!building) return res.status(404).json({ message: 'Edificio no encontrado' });
 
-    const { name, category, sizeM2, address, description, featured, displayOrder } = req.body;
+    const {
+      name, category, sizeM2, availableM2, address, description,
+      amenities, certifications, gallery, featured, displayOrder,
+    } = req.body;
 
     if (name && name !== building.name) {
       building.name = name;
@@ -72,8 +81,12 @@ async function update(req, res, next) {
 
     if (category !== undefined) building.category = category;
     if (sizeM2 !== undefined) building.sizeM2 = sizeM2;
+    if (availableM2 !== undefined) building.availableM2 = availableM2;
     if (address !== undefined) building.address = address;
     if (description !== undefined) building.description = description;
+    if (amenities !== undefined) building.amenities = Array.isArray(amenities) ? amenities : [];
+    if (certifications !== undefined) building.certifications = Array.isArray(certifications) ? certifications : [];
+    if (gallery !== undefined) building.gallery = Array.isArray(gallery) ? gallery : building.gallery;
     if (featured !== undefined) building.featured = featured === true || featured === 'true';
     if (displayOrder !== undefined) building.displayOrder = displayOrder;
 
@@ -115,9 +128,10 @@ async function uploadGalleryImage(req, res, next) {
     if (!building) return res.status(404).json({ message: 'Edificio no encontrado' });
     if (!req.file) return res.status(400).json({ message: 'No se recibio ninguna imagen' });
 
-    const gallery = Array.isArray(building.gallery) ? building.gallery : [];
+    const gallery = Array.isArray(building.gallery) ? [...building.gallery] : [];
     gallery.push(`/uploads/buildings/${req.file.filename}`);
     building.gallery = gallery;
+    building.changed('gallery', true);
     await building.save();
     res.json(building);
   } catch (err) {

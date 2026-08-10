@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export default function AdminLogin() {
@@ -20,7 +20,7 @@ export default function AdminLogin() {
       await login(email, password);
       navigate('/admin');
     } catch (err) {
-      setError(err.response?.data?.message || 'No se pudo iniciar sesion');
+      setError(err.response?.data?.message || 'No se pudo iniciar sesión');
     } finally {
       setLoading(false);
     }
@@ -29,6 +29,12 @@ export default function AdminLogin() {
   return (
     <div className="admin-login">
       <form onSubmit={handleSubmit} className="admin-login-form">
+        <Link to="/" className="admin-login-brand">
+          LUMINA <span>OFFICE</span>
+        </Link>
+        <Link to="/" className="admin-login-back">
+          ← Volver al sitio
+        </Link>
         <h1>Login administrador</h1>
         <input
           type="email"
@@ -39,7 +45,7 @@ export default function AdminLogin() {
         />
         <input
           type="password"
-          placeholder="Contrasena"
+          placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required

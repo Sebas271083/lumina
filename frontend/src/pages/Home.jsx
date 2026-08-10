@@ -3,32 +3,49 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 import BuildingCard from '../components/BuildingCard';
 import Reveal from '../components/Reveal';
+import usePageMeta from '../hooks/usePageMeta';
 import { Building2, Leaf, MapPin } from '../components/Icons';
 
+// TODO(pendiente): reemplazar por los isotipos reales en escala de grises (SVG/PNG) de cada
+// inquilino en cuanto se cuente con los archivos y la autorización de uso de marca correspondiente.
+// Hasta entonces se muestran como placeholders de "logo" en vez de una lista de texto plano.
 const tenants = [
-  'SAP', 'Telecom Argentina', 'Siemens', 'Pfizer', 'Mondelez',
-  'Arcor', 'Accenture', 'Unilever', 'Nestle', 'Danone',
+  { name: 'SAP', logo: null },
+  { name: 'Telecom Argentina', logo: null },
+  { name: 'Siemens', logo: null },
+  { name: 'Pfizer', logo: null },
+  { name: 'Mondelez', logo: null },
+  { name: 'Arcor', logo: null },
+  { name: 'Accenture', logo: null },
+  { name: 'Unilever', logo: null },
+  { name: 'Nestlé', logo: null },
+  { name: 'Danone', logo: null },
 ];
 
 const features = [
   {
     icon: MapPin,
-    title: 'Ubicacion estrategica',
+    title: 'Ubicación estratégica',
     text: 'Desarrollos posicionados en los principales corredores corporativos del norte del Gran Buenos Aires.',
   },
   {
     icon: Leaf,
     title: 'Sustentabilidad',
-    text: 'Edificios pensados con criterios de eficiencia energetica y bienestar para quienes los habitan.',
+    text: 'Edificios pensados con criterios de eficiencia energética y bienestar para quienes los habitan.',
   },
   {
     icon: Building2,
-    title: 'Diseno categoria AAA',
-    text: 'Estandares constructivos y de terminacion de primer nivel, a la altura de las compañias mas exigentes.',
+    title: 'Diseño categoría AAA',
+    text: 'Estándares constructivos y de terminación de primer nivel, a la altura de las compañías más exigentes.',
   },
 ];
 
 export default function Home() {
+  usePageMeta(
+    'Inicio',
+    'Lumina Office desarrolla y administra edificios de oficinas categoría AAA en el corredor norte del Gran Buenos Aires.'
+  );
+
   const [buildings, setBuildings] = useState([]);
 
   useEffect(() => {
@@ -54,17 +71,17 @@ export default function Home() {
         <div className="hero-inner">
           <div className="hero-content">
             <span className="hero-eyebrow">Desarrolladora inmobiliaria AAA</span>
-            <h1>Edificios de oficinas categoria AAA</h1>
+            <h1>Edificios de oficinas categoría AAA</h1>
             <p>
               Desarrollamos y administramos espacios corporativos de alta gama en el corredor norte
-              del Gran Buenos Aires, con los mas altos estandares de excelencia y sustentabilidad.
+              del Gran Buenos Aires, con los más altos estándares de excelencia y sustentabilidad.
             </p>
             <div className="hero-actions">
               <Link to="/edificios" className="btn btn-primary">
                 Ver edificios
               </Link>
               <Link to="/contacto" className="btn btn-outline">
-                Contactanos
+                Contáctanos
               </Link>
             </div>
           </div>
@@ -111,7 +128,7 @@ export default function Home() {
       <section className="section">
         <Reveal className="section-head">
           <div>
-            <span className="section-eyebrow">Por que Lumina Office</span>
+            <span className="section-eyebrow">Por qué Lumina Office</span>
             <h2>Excelencia en cada detalle</h2>
           </div>
         </Reveal>
@@ -132,16 +149,20 @@ export default function Home() {
 
       <section className="section section-alt">
         <Reveal>
-          <span className="section-eyebrow">Confian en nosotros</span>
+          <span className="section-eyebrow">Confían en nosotros</span>
           <h2>Nuestros inquilinos</h2>
         </Reveal>
         <div className="marquee">
           <div className="marquee-track">
-            {[...tenants, ...tenants].map((t, i) => (
-              <span key={`${t}-${i}`} className="marquee-item">
-                {t}
-              </span>
-            ))}
+            {[...tenants, ...tenants].map((t, i) =>
+              t.logo ? (
+                <img key={`${t.name}-${i}`} src={t.logo} alt={t.name} className="marquee-logo" />
+              ) : (
+                <span key={`${t.name}-${i}`} className="marquee-item" title={`Logotipo de ${t.name} pendiente`}>
+                  {t.name}
+                </span>
+              )
+            )}
           </div>
         </div>
       </section>

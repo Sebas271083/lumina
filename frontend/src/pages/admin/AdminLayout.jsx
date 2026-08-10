@@ -28,7 +28,7 @@ export default function AdminLayout() {
         <div className="admin-sidebar-user">
           <p>{user?.name}</p>
           <button onClick={handleLogout} className="btn btn-secondary">
-            Cerrar sesion
+            Cerrar sesión
           </button>
         </div>
       </aside>

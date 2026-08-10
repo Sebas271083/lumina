@@ -6,17 +6,17 @@ async function login(req, res, next) {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ message: 'Email y contrasena son requeridos' });
+      return res.status(400).json({ message: 'Email y contraseña son requeridos' });
     }
 
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return res.status(401).json({ message: 'Credenciales invalidas' });
+      return res.status(401).json({ message: 'Credenciales inválidas' });
     }
 
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) {
-      return res.status(401).json({ message: 'Credenciales invalidas' });
+      return res.status(401).json({ message: 'Credenciales inválidas' });
     }
 
     const token = jwt.sign(

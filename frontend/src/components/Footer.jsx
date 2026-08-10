@@ -7,11 +7,11 @@ export default function Footer() {
       <div className="footer-inner">
         <div className="footer-brand">
           <div className="footer-logo">LUMINA OFFICE</div>
-          <p>Edificios de oficinas categoria AAA en el corredor norte del Gran Buenos Aires.</p>
+          <p>Edificios de oficinas categoría AAA en el corredor norte del Gran Buenos Aires.</p>
         </div>
 
         <div className="footer-col">
-          <h4>Navegacion</h4>
+          <h4>Navegación</h4>
           <Link to="/institucional">Institucional</Link>
           <Link to="/edificios">Edificios</Link>
           <Link to="/sustentabilidad">Sustentabilidad</Link>
@@ -35,7 +35,10 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        © {new Date().getFullYear()} Lumina Office. Todos los derechos reservados.
+        <span>© {new Date().getFullYear()} Lumina Office. Todos los derechos reservados.</span>
+        <Link to="/admin/login" className="footer-admin-link">
+          Administración
+        </Link>
       </div>
     </footer>
   );

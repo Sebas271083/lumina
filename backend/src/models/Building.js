@@ -26,6 +26,11 @@ const Building = sequelize.define('Building', {
     allowNull: true,
     field: 'size_m2',
   },
+  availableM2: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    field: 'available_m2',
+  },
   address: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -40,6 +45,16 @@ const Building = sequelize.define('Building', {
     field: 'cover_image',
   },
   gallery: {
+    type: DataTypes.JSON,
+    allowNull: false,
+    defaultValue: [],
+  },
+  amenities: {
+    type: DataTypes.JSON,
+    allowNull: false,
+    defaultValue: [],
+  },
+  certifications: {
     type: DataTypes.JSON,
     allowNull: false,
     defaultValue: [],

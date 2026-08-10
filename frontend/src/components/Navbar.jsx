@@ -34,15 +34,12 @@ export default function Navbar() {
               {link.label}
             </NavLink>
           ))}
-          <NavLink to="/admin/login" className="navbar-login">
-            Login
-          </NavLink>
         </nav>
 
         <button
           type="button"
           className="navbar-toggle"
-          aria-label={open ? 'Cerrar menu' : 'Abrir menu'}
+          aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
@@ -60,9 +57,6 @@ export default function Navbar() {
             {link.label}
           </NavLink>
         ))}
-        <NavLink to="/admin/login" className="navbar-login">
-          Login
-        </NavLink>
       </nav>
     </header>
   );

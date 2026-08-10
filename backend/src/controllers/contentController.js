@@ -14,7 +14,7 @@ async function getByPage(req, res, next) {
 
 async function upsertBlock(req, res, next) {
   try {
-    const { page, blockKey, title, body, displayOrder } = req.body;
+    const { page, blockKey, title, body, imageUrl, displayOrder } = req.body;
     if (!page || !blockKey) {
       return res.status(400).json({ message: 'page y blockKey son requeridos' });
     }
@@ -26,9 +26,24 @@ async function upsertBlock(req, res, next) {
 
     block.title = title !== undefined ? title : block.title;
     block.body = body !== undefined ? body : block.body;
+    if (imageUrl !== undefined) block.imageUrl = imageUrl;
     if (displayOrder !== undefined) block.displayOrder = displayOrder;
     await block.save();
 
+    res.json(block);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function uploadImage(req, res, next) {
+  try {
+    const block = await SiteContent.findByPk(req.params.id);
+    if (!block) return res.status(404).json({ message: 'Bloque no encontrado' });
+    if (!req.file) return res.status(400).json({ message: 'No se recibio ninguna imagen' });
+
+    block.imageUrl = `/uploads/buildings/${req.file.filename}`;
+    await block.save();
     res.json(block);
   } catch (err) {
     next(err);
@@ -46,4 +61,4 @@ async function remove(req, res, next) {
   }
 }
 
-module.exports = { getByPage, upsertBlock, remove };
+module.exports = { getByPage, upsertBlock, remove, uploadImage };

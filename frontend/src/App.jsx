@@ -53,7 +53,7 @@ export default function App() {
           <Route path="consultas" element={<LeadsAdmin />} />
         </Route>
 
-        <Route path="*" element={<PublicLayout><h1 className="section">Pagina no encontrada</h1></PublicLayout>} />
+        <Route path="*" element={<PublicLayout><h1 className="section">Página no encontrada</h1></PublicLayout>} />
       </Routes>
     </AuthProvider>
   );

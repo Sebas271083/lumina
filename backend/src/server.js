@@ -5,6 +5,7 @@ const { sequelize } = require('./models');
 const PORT = process.env.PORT || 8081;
 
 async function start() {
+  console.log(`Conectando a MySQL en ${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME} (user: ${process.env.DB_USER})...`);
   try {
     await sequelize.authenticate();
     console.log('Conexion a MySQL establecida correctamente.');

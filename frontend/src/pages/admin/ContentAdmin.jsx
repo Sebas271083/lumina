@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import api from '../../services/api';
+import api, { assetUrl } from '../../services/api';
 
 const pages = [
   { value: 'institucional', label: 'Institucional' },
@@ -11,6 +11,7 @@ export default function ContentAdmin() {
   const [blocks, setBlocks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingId, setUploadingId] = useState(null);
 
   function load() {
     setLoading(true);
@@ -50,6 +51,25 @@ export default function ContentAdmin() {
     load();
   }
 
+  async function handleImageUpload(id, file) {
+    setUploadingId(id);
+    const data = new FormData();
+    data.append('image', file);
+    try {
+      await api.post(`/content/${id}/image`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      load();
+    } finally {
+      setUploadingId(null);
+    }
+  }
+
+  async function handleRemoveImage(block) {
+    await api.post('/content', { page, blockKey: block.blockKey, imageUrl: null });
+    load();
+  }
+
   function addBlock() {
     setBlocks([
       ...blocks,
@@ -76,22 +96,59 @@ export default function ContentAdmin() {
         <div className="content-blocks-admin">
           {blocks.map((block, i) => (
             <div key={block.id} className="admin-form">
-              <input
-                placeholder="Clave del bloque (unica, ej: mision)"
-                value={block.blockKey}
-                onChange={(e) => updateBlockField(i, 'blockKey', e.target.value)}
-              />
-              <input
-                placeholder="Titulo"
-                value={block.title || ''}
-                onChange={(e) => updateBlockField(i, 'title', e.target.value)}
-              />
-              <textarea
-                placeholder="Texto"
-                rows={3}
-                value={block.body || ''}
-                onChange={(e) => updateBlockField(i, 'body', e.target.value)}
-              />
+              <div className="admin-field">
+                <label htmlFor={`ck-${block.id}`}>Clave del bloque (única)</label>
+                <input
+                  id={`ck-${block.id}`}
+                  placeholder="Ej: mision"
+                  value={block.blockKey}
+                  onChange={(e) => updateBlockField(i, 'blockKey', e.target.value)}
+                />
+              </div>
+              <div className="admin-field">
+                <label htmlFor={`ct-${block.id}`}>Título</label>
+                <input
+                  id={`ct-${block.id}`}
+                  value={block.title || ''}
+                  onChange={(e) => updateBlockField(i, 'title', e.target.value)}
+                />
+              </div>
+              <div className="admin-field">
+                <label htmlFor={`cb-${block.id}`}>Texto</label>
+                <textarea
+                  id={`cb-${block.id}`}
+                  rows={3}
+                  value={block.body || ''}
+                  onChange={(e) => updateBlockField(i, 'body', e.target.value)}
+                />
+              </div>
+
+              {!block.isNew && (
+                <div className="admin-field">
+                  <label>Imagen del bloque</label>
+                  <div className="admin-block-image">
+                    <label className="thumb-upload large" title="Subir o reemplazar la imagen">
+                      {block.imageUrl ? (
+                        <img src={assetUrl(block.imageUrl)} alt={block.title || block.blockKey} />
+                      ) : (
+                        <span>{uploadingId === block.id ? 'Subiendo...' : 'Subir imagen'}</span>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        disabled={uploadingId === block.id}
+                        onChange={(e) => e.target.files[0] && handleImageUpload(block.id, e.target.files[0])}
+                      />
+                    </label>
+                    {block.imageUrl && (
+                      <button type="button" className="admin-remove-image" onClick={() => handleRemoveImage(block)}>
+                        Quitar imagen
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <div className="form-actions">
                 <button
                   className="btn btn-primary"

@@ -25,6 +25,11 @@ const SiteContent = sequelize.define('SiteContent', {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  imageUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    field: 'image_url',
+  },
   displayOrder: {
     type: DataTypes.INTEGER,
     allowNull: false,
